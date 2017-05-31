@@ -27,17 +27,26 @@ def linker(link):
     #print 'LINK IS {}'.format(link)
     content = urllib2.urlopen(link).read()
     linkSoup = BeautifulSoup(content,"html.parser")
-    print linkSoup.prettify()
-    command =  linkSoup.find(name='tabtrigger').string
+    #print linkSoup.prettify()
+    try:
+        command =  linkSoup.find(name='tabtrigger').string
+
+    except:
+        command =  linkSoup.find(name='description').string[:3]
+
     autocomplete = linkSoup.find(name='content').string
+    #print repr(autocomplete)
     name =  linkSoup.find(name='description').string
     #name
     #prefix
     #body
-    end = "  '{}':\n    'prefix': '{}'\n    'body': '{}'\n".format(name,command,autocomplete)
+    end = "  '{}':\n    'prefix': '{}'\n    'body': {}\n".format(name,command,repr(autocomplete)[1::])
     writeSnippets(end)
+
     return end
 
 
-
-result =  [linker(i) for i in myLinks]
+for i,e in enumerate(myLinks):
+    #print e
+    print i
+    linker(e)
